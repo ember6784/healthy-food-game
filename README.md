@@ -1,70 +1,194 @@
-# Getting Started with Create React App
+# 🥗 Гра про здорове харчування
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Освітня гра для дітей 1-11 класів, де вони вчаться обирати здорову їжу в ігровій формі.
 
-## Available Scripts
+## 📋 Опис проекту
 
-In the project directory, you can run:
+Інтерактивна веб-гра, яка допомагає дітям:
+- Розрізняти корисні та шкідливі продукти
+- Складати збалансований раціон
+- Розуміти важливість різноманітності в харчуванні
+- Вчитися контролювати споживання цукру та калорій
 
-### `npm start`
+## 🎮 Особливості гри
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Два рівні складності:
+- **1-5 класи**: прості завдання з яскравими картинками
+- **6-11 класи**: складніші завдання з аналізом БЖУ та калорій
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Різноманітні сценарії:
+- Збір сніданку для школи
+- Раціон для спортсмена
+- Контроль споживання цукру
+- Їжа для покращення концентрації
+- Підготовка до іспиту
 
-### `npm test`
+### Система оцінювання:
+- Миттєвий зворотний зв'язок
+- Детальна оцінка вибору
+- Підказки під час гри
+- Система зірок (0-5)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🚀 Швидкий старт
 
-### `npm run build`
+### Встановлення залежностей:
+```bash
+npm install
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Запуск в режимі розробки:
+```bash
+npm start
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Відкрийте [http://localhost:3000](http://localhost:3000) в браузері.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Збірка для продакшену:
+```bash
+npm run build
+```
 
-### `npm run eject`
+## 📁 Структура проекту
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```
+healthy-food-game/
+├── src/
+│   ├── components/      # React компоненти (майбутні)
+│   ├── data/           # Дані гри
+│   │   ├── products.js     # База продуктів
+│   │   └── scenarios.js    # Ігрові сценарії
+│   ├── utils/          # Допоміжні функції
+│   │   └── gameLogic.js    # Логіка оцінювання
+│   ├── hooks/          # Користувацькі хуки (майбутні)
+│   ├── App.js          # Головний компонент
+│   ├── App.css         # Стилі додатку
+│   └── index.js        # Точка входу
+├── public/             # Статичні файли
+└── package.json        # Конфігурація проекту
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 🛠️ Технології
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- **React 19** - UI фреймворк
+- **Tailwind CSS 4** - стилізація
+- **JavaScript ES6+** - логіка гри
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 📊 База даних продуктів
 
-## Learn More
+База містить 27 продуктів, розподілених по категоріях:
+- 🍎 Фрукти (5 продуктів)
+- 🥕 Овочі (5 продуктів)
+- 🥛 Молочні продукти (3 продукти)
+- 🍞 Зернові (3 продукти)
+- 🍗 Білкові продукти (4 продукти)
+- 🍔 Шкідливі продукти (7 продуктів)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Кожен продукт має:
+- Назву українською
+- Оцінку корисності (0-100)
+- Калорійність
+- Емодзі для візуалізації
+- Опис властивостей
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 🎯 Ігрові сценарії
 
-### Code Splitting
+Всього 8 сценаріїв:
+- 3 для молодших класів (легкі)
+- 5 для старших класів (середні та складні)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Кожен сценарій має:
+- Чітку мету
+- Правила оцінювання
+- Підказки
+- Обмеження (кількість продуктів, калорії, цукор)
 
-### Analyzing the Bundle Size
+## 🧮 Система оцінювання
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Гра оцінює:
+1. **Корисність продуктів** (healthScore)
+2. **Збалансованість раціону** (різні категорії)
+3. **Відсутність шкідливих продуктів**
+4. **Дотримання обмежень** (калорії, цукор)
+5. **Різноманітність вибору**
 
-### Making a Progressive Web App
+Оцінки:
+- **90-100%**: Відмінно! 🌟
+- **75-89%**: Добре! 😊
+- **60-74%**: Непогано 🤔
+- **<60%**: Спробуй ще 😕
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## 🔄 Подальший розвиток
 
-### Advanced Configuration
+### Заплановані функції:
+- [ ] Система досягнень та нагород
+- [ ] Збереження прогресу
+- [ ] Мультиплеєр (змагання з друзями)
+- [ ] Більше продуктів та сценаріїв
+- [ ] Інформаційні картки про продукти
+- [ ] Міні-ігри (мемо, вікторини)
+- [ ] Статистика прогресу
+- [ ] Батьківський контроль
+- [ ] Експорт результатів для вчителів
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### Можливі покращення:
+- Адаптивний дизайн для мобільних
+- Звукові ефекти
+- Анімації переходів
+- Темна тема
+- Локалізація (англійська, інші мови)
 
-### Deployment
+## 👨‍💻 Розробка
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### Правила розробки:
+1. Не переименовувати існуючі функції без причини
+2. Розширювати існуючі функції замість створення нових
+3. Зберігати єдиний стиль коду
+4. Додавати докстрінги до функцій
+5. Мінімум дублювання коду
 
-### `npm run build` fails to minify
+### Додавання нових продуктів:
+Відредагуйте `src/data/products.js`:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```javascript
+{
+  id: 'unique-id',
+  name: 'Назва українською',
+  category: 'категорія',
+  healthScore: 0-100,
+  calories: число,
+  emoji: '📱',
+  description: 'Опис',
+  ageAppropriate: ['1-5', '6-11']
+}
+```
+
+### Додавання нових сценаріїв:
+Відредагуйте `src/data/scenarios.js`:
+
+```javascript
+{
+  id: 'unique-id',
+  title: 'Назва завдання',
+  description: 'Опис',
+  ageGroup: '1-5' або '6-11',
+  difficulty: 'easy' | 'medium' | 'hard',
+  goals: { /* правила */ },
+  scoring: { /* бали */ }
+}
+```
+
+## 📝 Ліцензія
+
+Проект створено для освітніх цілей.
+
+## 🤝 Внесок
+
+Вітаються пропозиції та покращення! Створюйте issues та pull requests.
+
+## 📧 Контакти
+
+Для питань та пропозицій звертайтесь через GitHub issues.
+
+---
+
+**Створено з ❤️ для здоров'я дітей України**

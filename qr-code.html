@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR-код для гри "Смачна Гра"</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', cursive, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 30px;
+            padding: 60px 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 600px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 48px;
+            color: #667eea;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            font-size: 24px;
+            color: #666;
+            margin-bottom: 40px;
+            font-weight: bold;
+        }
+
+        #qrcode {
+            display: inline-block;
+            padding: 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        .instructions {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-top: 30px;
+            font-size: 20px;
+            line-height: 1.8;
+            font-weight: bold;
+        }
+
+        .step {
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .step-number {
+            background: white;
+            color: #f5576c;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .url {
+            background: #f0f0f0;
+            padding: 15px 25px;
+            border-radius: 15px;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #667eea;
+            font-weight: bold;
+            word-break: break-all;
+        }
+
+        .print-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 20px 50px;
+            font-size: 22px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 30px;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .print-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.5);
+        }
+
+        .print-button:active {
+            transform: translateY(0);
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .print-button {
+                display: none;
+            }
+            .container {
+                box-shadow: none;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Смачна Гра 🍎</h1>
+        <p class="subtitle">Навчайся обирати здорову їжу!</p>
+        
+        <div id="qrcode"></div>
+        
+        <div class="url">
+            <span id="game-url">https://your-app.vercel.app</span>
+        </div>
+
+        <div class="instructions">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div>Відскануй QR-код камерою телефону</div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div>Або введи адресу вручну</div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div>Грай та навчайся! 🎉</div>
+            </div>
+        </div>
+
+        <button class="print-button" onclick="window.print()">
+            🖨️ Роздрукувати
+        </button>
+    </div>
+
+    <!-- Бібліотека для генерації QR-кодів -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
+    <script>
+        // ВАЖЛИВО: Замініть цей URL на ваш реальний URL після деплою на Vercel
+        const GAME_URL = 'https://your-app.vercel.app';
+        
+        // Оновлюємо URL на сторінці
+        document.getElementById('game-url').textContent = GAME_URL;
+        
+        // Генеруємо QR-код
+        new QRCode(document.getElementById("qrcode"), {
+            text: GAME_URL,
+            width: 300,
+            height: 300,
+            colorDark: "#667eea",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
+    </script>
+</body>
+</html>

@@ -7,28 +7,26 @@ import { categories } from '../data/products';
 /**
  * Причини, чому продукт корисний або шкідливий
  */
+// Ключі для перекладу характеристик продуктів
 const productBenefits = {
-  // Корисні речовини
-  vitamins: 'Багатий вітамінами',
-  fiber: 'Містить клітковину для травлення',
-  protein: 'Багатий білком для м\'язів',
-  calcium: 'Містить кальцій для кісток',
-  iron: 'Містить залізо для крові',
-  omega3: 'Багатий омега-3 для мозку',
-  antioxidants: 'Містить антиоксиданти',
-  lowCalorie: 'Низькокалорійний',
-  water: 'Багато води, освіжає',
-  energy: 'Дає енергію',
-  
-  // Шкідливі речовини
-  sugar: 'Багато цукру (підвищує рівень глюкози)',
-  fat: 'Багато насичених жирів',
-  salt: 'Високий вміст солі (підвищує тиск)',
-  calories: 'Дуже висока калорійність',
-  processed: 'Сильно оброблений продукт',
-  additives: 'Штучні добавки та барвники',
-  caffeine: 'Високий вміст кофеїну',
-  trans_fats: 'Містить трансжири'
+  vitamins: 'vitamins',
+  fiber: 'fiber',
+  protein: 'protein',
+  calcium: 'calcium',
+  iron: 'iron',
+  omega3: 'omega3',
+  antioxidants: 'antioxidants',
+  lowCalorie: 'lowCalorie',
+  water: 'water',
+  energy: 'energy',
+  sugar: 'sugar',
+  fat: 'fat',
+  salt: 'salt',
+  calories: 'calories',
+  processed: 'processed',
+  additives: 'additives',
+  caffeine: 'caffeine',
+  trans_fats: 'trans_fats'
 };
 
 /**
@@ -89,11 +87,11 @@ const getProductDetails = (product) => {
 /**
  * Обчислити загальний бал за вибрані продукти
  */
-export const calculateScore = (selectedProducts, scenario) => {
+export const calculateScore = (selectedProducts, scenario, t) => {
   if (!selectedProducts || selectedProducts.length === 0) {
     return {
       totalScore: 0,
-      feedback: 'Ти не обрав жодного продукту!',
+      feedbackKeys: [{ key: 'fb_no_products' }],
       details: {},
       analysis: null
     };
@@ -102,7 +100,7 @@ export const calculateScore = (selectedProducts, scenario) => {
   const { goals, scoring } = scenario;
   let score = 0;
   const maxPossibleScore = scoring.perfectScore;
-  const feedback = [];
+  const feedbackKeys = [];
   const details = {};
 
   // 1. Перевірка кількості продуктів (20%)
@@ -110,13 +108,13 @@ export const calculateScore = (selectedProducts, scenario) => {
   details.productCount = productCount;
   
   if (productCount >= goals.minProducts && productCount <= goals.maxProducts) {
-    feedback.push('✓ Правильна кількість продуктів');
+    feedbackKeys.push({ key: 'fb_correct_count' });
     score += maxPossibleScore * 0.2;
   } else if (productCount < goals.minProducts) {
-    feedback.push(`Обрано замало продуктів (${productCount}/${goals.minProducts})`);
+    feedbackKeys.push({ key: 'fb_too_few', params: { count: productCount, min: goals.minProducts } });
     score += (maxPossibleScore * 0.2 * productCount) / goals.minProducts;
   } else {
-    feedback.push(`Обрано забагато продуктів (${productCount}/${goals.maxProducts})`);
+    feedbackKeys.push({ key: 'fb_too_many', params: { count: productCount, max: goals.maxProducts } });
     score += maxPossibleScore * 0.1;
   }
 
@@ -145,11 +143,11 @@ export const calculateScore = (selectedProducts, scenario) => {
   score += maxPossibleScore * 0.4 * healthPercentage;
 
   if (avgHealthScore >= 70) {
-    feedback.push('✓ Продукти дуже корисні для здоров\'я');
+    feedbackKeys.push({ key: 'fb_very_healthy' });
   } else if (avgHealthScore >= 50) {
-    feedback.push('Продукти помірно корисні');
+    feedbackKeys.push({ key: 'fb_moderate_healthy' });
   } else {
-    feedback.push('Обрано багато шкідливих продуктів');
+    feedbackKeys.push({ key: 'fb_many_unhealthy' });
   }
 
   // 3. Перевірка шкідливих категорій (20%)
@@ -159,19 +157,19 @@ export const calculateScore = (selectedProducts, scenario) => {
     );
     
     if (junkProducts.length === 0) {
-      feedback.push('✓ Немає шкідливих продуктів - чудово!');
+      feedbackKeys.push({ key: 'fb_no_junk' });
       score += maxPossibleScore * 0.2;
     } else {
       const junkPercentage = junkProducts.length / productCount;
       const junkScore = maxPossibleScore * 0.2 * (1 - junkPercentage);
       score += junkScore;
-      feedback.push(`⚠ Шкідливих продуктів: ${junkProducts.length}`);
-      details.junkProducts = junkProducts.map(p => p.name);
+      feedbackKeys.push({ key: 'fb_has_junk', params: { count: junkProducts.length } });
+      details.junkProducts = junkProducts.map(p => `product_${p.id}`);
     }
   }
 
   // 4. Перевірка необхідних категорій (20%)
-  if (goals.needsCategory) {
+  if (goals.needsCategory && goals.needsCategory.length > 0) {
     const selectedCategories = new Set(selectedProducts.map(p => p.category));
     const missingCategories = goals.needsCategory.filter(cat => 
       !selectedCategories.has(cat)
@@ -181,19 +179,39 @@ export const calculateScore = (selectedProducts, scenario) => {
     score += maxPossibleScore * 0.2 * categoryScore;
 
     if (missingCategories.length === 0) {
-      feedback.push('✓ Збалансований раціон - є всі потрібні категорії!');
+      feedbackKeys.push({ key: 'fb_balanced' });
     } else {
       const missingNames = missingCategories.map(cat => categories[cat].name);
-      feedback.push(`Не вистачає: ${missingNames.join(', ')}`);
+      feedbackKeys.push({ key: 'fb_missing', params: { categories: missingNames.join(', ') } });
     }
 
     details.selectedCategories = Array.from(selectedCategories).map(cat => categories[cat].name);
+  } else {
+    // Якщо не вказано обов'язкові категорії - даємо повний бал за цей розділ
+    score += maxPossibleScore * 0.2;
   }
 
-  // 5. Бонуси за різноманітність
+  // 5. Перевірка на надмірну концентрацію однієї категорії
+  const categoryCounts = {};
+  selectedProducts.forEach(p => {
+    categoryCounts[p.category] = (categoryCounts[p.category] || 0) + 1;
+  });
+
+  // Якщо одна категорія становить більше 50% - штраф
+  const maxCategoryCount = Math.max(...Object.values(categoryCounts));
+  const categoryPercentage = maxCategoryCount / productCount;
+  
+  if (categoryPercentage > 0.5) {
+    const penalty = 15 * (categoryPercentage - 0.5) * 2; // Штраф до 15 балів
+    score -= penalty;
+    feedbackKeys.push({ key: 'fb_imbalance' });
+    details.categoryImbalance = true;
+  }
+
+  // 6. Бонуси за різноманітність
   const uniqueCategories = new Set(selectedProducts.map(p => p.category));
-  if (uniqueCategories.size >= 4) {
-    feedback.push('✓ Чудове різноманіття продуктів!');
+  if (uniqueCategories.size >= 3) {
+    feedbackKeys.push({ key: 'fb_diversity' });
     score += 5;
     details.diversity = true;
   }
@@ -204,7 +222,7 @@ export const calculateScore = (selectedProducts, scenario) => {
   details.unhealthyCount = unhealthyCount;
 
   // 7. Детальний аналіз (тільки для 6-11 класів)
-  const analysis = scenario.ageGroup === '6-11' ? generateDetailedAnalysis(selectedProducts, details, goals) : null;
+  const analysis = scenario.ageGroup === '6-11' ? generateDetailedAnalysis(selectedProducts, details, goals, t) : null;
 
   console.log('Розрахунок балів:', {
     selectedProducts: selectedProducts.map(p => ({ name: p.name, health: p.healthScore })),
@@ -219,7 +237,7 @@ export const calculateScore = (selectedProducts, scenario) => {
   return {
     totalScore,
     maxScore: maxPossibleScore,
-    feedback: feedback.join('\n'),
+    feedbackKeys,
     details,
     grade: getGrade(totalScore, maxPossibleScore),
     analysis
@@ -229,7 +247,7 @@ export const calculateScore = (selectedProducts, scenario) => {
 /**
  * Генерувати детальний аналіз для старших класів
  */
-const generateDetailedAnalysis = (selectedProducts, details, goals) => {
+const generateDetailedAnalysis = (selectedProducts, details, goals, t) => {
   const analysis = {
     nutritionSummary: {
       totalCalories: details.totalCalories,
@@ -248,19 +266,19 @@ const generateDetailedAnalysis = (selectedProducts, details, goals) => {
   // Оцінка калорій
   if (goals.maxCalories) {
     if (details.totalCalories <= goals.maxCalories * 0.8) {
-      analysis.nutritionSummary.calorieStatus = '✓ Відмінно! Калорійність в межах норми';
+      analysis.nutritionSummary.calorieStatus = t('calorie_good');
     } else if (details.totalCalories <= goals.maxCalories) {
-      analysis.nutritionSummary.calorieStatus = '✓ Добре! Калорійність прийнятна';
+      analysis.nutritionSummary.calorieStatus = t('calorie_good');
     } else {
-      analysis.nutritionSummary.calorieStatus = `⚠ Перевищення норми на ${details.totalCalories - goals.maxCalories} калорій`;
-      analysis.recommendations.push('Намагайся обирати менш калорійні продукти');
+      analysis.nutritionSummary.calorieStatus = t('calorie_exceed', { count: details.totalCalories - goals.maxCalories });
+      analysis.recommendations.push(t('recommend_less_calories'));
     }
   }
 
   // Розбір продуктів за категоріями корисності
   selectedProducts.forEach(product => {
     const productInfo = {
-      name: product.name,
+      nameKey: `product_${product.id}`,
       calories: product.calories,
       healthScore: product.healthScore,
       details: getProductDetails(product)
@@ -278,32 +296,32 @@ const generateDetailedAnalysis = (selectedProducts, details, goals) => {
   // Детальні пояснення
   if (analysis.productBreakdown.healthy.length > 0) {
     analysis.detailedExplanation.push({
-      title: '✅ Корисні продукти в твоєму виборі:',
+      title: t('healthy_products'),
       items: analysis.productBreakdown.healthy.map(p => 
-        `${p.name} (${p.calories} ккал): ${p.details.benefits.join(', ') || 'Корисний продукт'}`
+        `${t(p.nameKey)} (${p.calories} ${t('kcal')}): ${p.details.benefits.map(b => t(b)).join(', ') || t('fb_very_healthy')}`
       )
     });
   }
 
   if (analysis.productBreakdown.unhealthy.length > 0) {
     analysis.detailedExplanation.push({
-      title: '⚠️ Шкідливі продукти в твоєму виборі:',
+      title: t('unhealthy_products'),
       items: analysis.productBreakdown.unhealthy.map(p => 
-        `${p.name} (${p.calories} ккал): ${p.details.concerns.join(', ') || 'Краще уникати'}`
+        `${t(p.nameKey)} (${p.calories} ${t('kcal')}): ${p.details.concerns.map(c => t(c)).join(', ') || t('fb_many_unhealthy')}`
       )
     });
 
     // Рекомендації
-    analysis.recommendations.push('Спробуй замінити шкідливі продукти на корисніші альтернативи');
+    analysis.recommendations.push(t('recommend_replace'));
     
     if (analysis.productBreakdown.unhealthy.some(p => p.details.concerns.includes(productBenefits.sugar))) {
-      analysis.recommendations.push('Надмірне споживання цукру може призвести до діабету та карієсу');
+      analysis.recommendations.push(t('recommend_sugar'));
     }
     if (analysis.productBreakdown.unhealthy.some(p => p.details.concerns.includes(productBenefits.fat))) {
-      analysis.recommendations.push('Насичені жири підвищують холестерин та ризик серцевих захворювань');
+      analysis.recommendations.push(t('recommend_fat'));
     }
     if (analysis.productBreakdown.unhealthy.some(p => p.details.concerns.includes(productBenefits.salt))) {
-      analysis.recommendations.push('Надмірна сіль може підвищити кров\'яний тиск');
+      analysis.recommendations.push(t('recommend_salt'));
     }
   }
 
@@ -314,7 +332,7 @@ const generateDetailedAnalysis = (selectedProducts, details, goals) => {
     );
     
     if (hasAllCategories) {
-      analysis.recommendations.push('Чудова збалансованість! У твоєму раціоні є всі необхідні групи продуктів');
+      analysis.recommendations.push(t('recommend_balance'));
     }
   }
 
@@ -329,37 +347,37 @@ export const getGrade = (score, maxScore) => {
 
   if (percentage >= 90) {
     return {
-      grade: 'Відмінно!',
+      gradeKey: 'grade_excellent',
       emoji: '🌟',
-      message: 'Ти справжній експерт здорового харчування!',
+      messageKey: 'msg_expert',
       color: '#51CF66'
     };
   } else if (percentage >= 75) {
     return {
-      grade: 'Добре!',
+      gradeKey: 'grade_good',
       emoji: '😊',
-      message: 'Чудовий вибір! Так тримати!',
+      messageKey: 'msg_great',
       color: '#74C0FC'
     };
   } else if (percentage >= 60) {
     return {
-      grade: 'Непогано',
+      gradeKey: 'grade_average',
       emoji: '🤔',
-      message: 'Добре, але можна краще!',
+      messageKey: 'msg_good',
       color: '#FFD43B'
     };
   } else if (percentage >= 40) {
     return {
-      grade: 'Можна краще',
+      gradeKey: 'grade_poor',
       emoji: '😐',
-      message: 'Спробуй обрати більше корисних продуктів',
+      messageKey: 'msg_better',
       color: '#FFA94D'
     };
   } else {
     return {
-      grade: 'Спробуй ще',
+      gradeKey: 'grade_bad',
       emoji: '😕',
-      message: 'Обирай корисніші продукти!',
+      messageKey: 'msg_try_again',
       color: '#FF6B6B'
     };
   }
@@ -367,8 +385,9 @@ export const getGrade = (score, maxScore) => {
 
 /**
  * Отримати підказку на основі поточного вибору
+ * Повертає об'єкт { key, params } для перекладу
  */
-export const getHint = (selectedProducts, scenario) => {
+export const getHint = (selectedProducts, scenario, t) => {
   const { goals } = scenario;
   const selectedCategories = new Set(selectedProducts.map(p => p.category));
 
@@ -378,8 +397,16 @@ export const getHint = (selectedProducts, scenario) => {
     );
 
     if (missingCategories.length > 0) {
+      // Спеціальна підказка для "Здоровий обід"
+      if (scenario.id === 'lunch-1') {
+        return { key: 'hint_lunch' };
+      }
+      
       const missing = missingCategories[0];
-      return `Спробуй додати ${categories[missing].name.toLowerCase()} ${categories[missing].icon}`;
+      return { 
+        key: 'hint_add_category', 
+        params: { category: t(`cat_${missing}`), icon: categories[missing].icon }
+      };
     }
   }
 
@@ -389,21 +416,21 @@ export const getHint = (selectedProducts, scenario) => {
     );
     
     if (hasJunk) {
-      return 'Краще прибрати шкідливі продукти 🚫';
+      return { key: 'hint_remove_junk' };
     }
   }
 
   if (selectedProducts.length < goals.minProducts) {
-    const need = goals.minProducts - selectedProducts.length;
-    return `Потрібно ще ${need} ${need === 1 ? 'продукт' : 'продукти'}`;
+    return { key: 'hint_sugar_control' };
   }
 
   if (selectedProducts.length > goals.maxProducts) {
     const extra = selectedProducts.length - goals.maxProducts;
-    return `Забагато! Прибери ${extra} ${extra === 1 ? 'продукт' : 'продукти'}`;
+    const countWord = extra === 1 ? t('product_1') || 'product' : t('product_many') || 'products';
+    return { key: 'hint_too_many', params: { count: extra, countWord } };
   }
 
-  return 'Все виглядає добре! Можеш завершити 👍';
+  return { key: 'hint_good' };
 };
 
 /**

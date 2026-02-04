@@ -24,6 +24,7 @@ export const scenarios = [
       minProducts: 5,
       maxProducts: 5,
       minHealthScore: 70,
+      needsCategory: ['fruits', 'grains'],
       avoidCategories: ['junk']
     },
     requiredProducts: 5,

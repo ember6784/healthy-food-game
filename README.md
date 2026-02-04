@@ -192,7 +192,9 @@ Edit `src/data/scenarios.js`:
 
 ### 📝 License
 
-Project created for educational purposes.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ### 🤝 Contributing
 
@@ -399,7 +401,9 @@ healthy-food-game/
 
 ### 📝 Ліцензія
 
-Проєкт створено для освітніх цілей.
+Цей проєкт ліцензовано за MIT License - дивіться файл [LICENSE](LICENSE) для деталей.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ### 🤝 Внесок
 

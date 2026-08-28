@@ -1,5 +1,9 @@
 # 🥗 Healthy Food Game / Гра про здорове харчування
 
+[![Live on Netlify](https://img.shields.io/badge/Live-Netlify-00C7B7?logo=netlify&logoColor=white)](https://healthy-food-game.netlify.app)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Code of Conduct](https://img.shields.io/badge/Code%20of%20Conduct-Contributor%20Covenant-5E0D73.svg)](CODE_OF_CONDUCT.md)
+
 **[English](#english) | [Українська](#українська)**
 
 ---
@@ -8,6 +12,19 @@
 ## 🇬🇧 English
 
 An educational game for grades 1-11 where children learn to choose healthy food in a fun, interactive way.
+
+### Public benefit and access
+
+Healthy Food Game is a free, non-commercial, open-source educational resource
+developed to support healthy-eating education for children in Ukraine. The
+application does not display advertising, charge users, or collect personal
+data. It is publicly available at
+[healthy-food-game.netlify.app](https://healthy-food-game.netlify.app).
+
+The project welcomes responsible community contributions under the
+[Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md). Application details
+prepared for Netlify's Open Source Plan are documented in
+[NETLIFY_OPEN_SOURCE_APPLICATION.md](NETLIFY_OPEN_SOURCE_APPLICATION.md).
 
 ### 📋 Project Description
 
@@ -405,6 +422,19 @@ healthy-food-game/
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+### 🌍 Суспільна користь і доступність
+
+«Смачна Гра» — безкоштовний, некомерційний освітній ресурс із відкритим
+сирцевим кодом, створений для підтримки навчання дітей в Україні принципам
+здорового харчування. У застосунку немає реклами чи платних функцій, і він не
+збирає персональні дані. Гра доступна за адресою
+[healthy-food-game.netlify.app](https://healthy-food-game.netlify.app).
+
+Учасники проєкту дотримуються
+[Кодексу поведінки Contributor Covenant](CODE_OF_CONDUCT.md). Підготовлені дані
+для заявки на Netlify Open Source Plan наведені у файлі
+[NETLIFY_OPEN_SOURCE_APPLICATION.md](NETLIFY_OPEN_SOURCE_APPLICATION.md).
+
 ### 🤝 Внесок
 
 Вітаються пропозиції та покращення! Створюйте issues та pull requests.
@@ -416,3 +446,5 @@ healthy-food-game/
 ---
 
 **Створено з ❤️ для здоров'я дітей України / Created with ❤️ for the health of Ukrainian children**
+
+[This site is powered by Netlify](https://www.netlify.com/).

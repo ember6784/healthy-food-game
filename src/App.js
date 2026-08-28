@@ -636,6 +636,15 @@ function App() {
       {gameState === 'playing' && renderGame()}
       {gameState === 'results' && renderResults()}
       {gameState === 'about' && renderAbout()}
+      <a
+        href="https://www.netlify.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-2 right-2 z-50 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-gray-600 shadow-md transition hover:bg-white hover:text-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500"
+        aria-label="This site is powered by Netlify"
+      >
+        Powered by Netlify
+      </a>
     </div>
   );
 }
